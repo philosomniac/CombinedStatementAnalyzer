@@ -32,7 +32,10 @@ namespace CombinedStatementAnalyzer
 
         public double GetCombinationRate()
         {
-            return cycleData.Sum(x => x.combinedStatementCount) / cycleData.Sum(x => x.statementCount);
+            double dividend = cycleData.Sum(x => x.combinedStatementCount);
+            double divisor = cycleData.Sum(x => x.statementCount);
+
+            return dividend / divisor;
         }
 
     }

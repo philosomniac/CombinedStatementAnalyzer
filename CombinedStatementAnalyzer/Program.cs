@@ -61,11 +61,11 @@ namespace CombinedStatementAnalyzer
             //Simulation mySim = RunSimulation(new TimeSpan(5, 0, 0, 0, 0), statementData);
 
             StreamWriter writer = new StreamWriter("outputdata.csv",false);
-            writer.WriteLine("Simulation Number,CycleLength,StatementCount,CombinedStatementCount,CombinationRate");
+            writer.WriteLine("Simulation Number,CycleLength (Days),StatementCount,CombinedStatementCount,CombinationRate");
             int simulationCount = 0;
             foreach(Simulation s in Simulations)
             {
-                writer.WriteLine(simulationCount.ToString() + $",{s.cycleLength.Days.ToString()},{s.GetStatementCount()},{s.GetCombinedStatementCount()},{s.GetCombinationRate()}");
+                writer.WriteLine(simulationCount.ToString() + $",{s.cycleLength.Days.ToString()},{s.GetStatementCount()},{s.GetCombinedStatementCount()},{s.GetCombinationRate().ToString("p")}");
                 simulationCount++;
             }
             writer.Close();
@@ -73,6 +73,7 @@ namespace CombinedStatementAnalyzer
 
         public static Simulation RunSimulation(TimeSpan cycleLength, List<Statement> data)
         {
+            Console.WriteLine($"Running simulation with {cycleLength.Days} day cycle...");
             List<Statement> workingData = data.Select(s => new Statement(s.CustomerAccountID, s.CreatedDate)).ToList();
             List<StatementCycle> currentCycles = new List<StatementCycle>();
             var startDateQuery = from d in workingData
@@ -114,9 +115,12 @@ namespace CombinedStatementAnalyzer
                 workingData.RemoveAll(x => x.CreatedDate <= cycleEndDate);
 
                 startDate = cycleEndDate;
+                
+                
             }
-
-            return new Simulation(cycleLength, currentCycles);
+            Simulation currentSim = new Simulation(cycleLength, currentCycles);
+            Console.WriteLine($"Simulation complete. Combined statement count: {currentSim.GetCombinedStatementCount()}. Total statement count: {currentSim.GetStatementCount()}. Combination Rate: {currentSim.GetCombinationRate()}");
+            return currentSim;
         }
     }
 }
