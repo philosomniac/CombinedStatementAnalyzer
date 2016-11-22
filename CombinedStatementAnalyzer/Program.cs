@@ -96,6 +96,7 @@ namespace CombinedStatementAnalyzer
                 //count how many statements there are in total
                 int statementCount = currentCycleStatements.Count();
 
+
                 //count how many statements in there have matching CustomerAccountIDs
                 var combinedStatementsQuery = from s in currentCycleStatements
                                          group s by s.CustomerAccountID into g
