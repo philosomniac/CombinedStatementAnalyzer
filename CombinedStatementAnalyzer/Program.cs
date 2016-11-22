@@ -102,7 +102,7 @@ namespace CombinedStatementAnalyzer
                                          select new { CustomerAccountID = g.Key, StatementCount = g.Count() };
 
                 //TODO: Fix this to account for combined statements with >2
-                int combinedStatementsCount = combinedStatementsQuery.Where(x => x.StatementCount > 1).Count();
+                int combinedStatementsCount = combinedStatementsQuery.Where(x => x.StatementCount > 1).Sum(x => x.StatementCount);
 
 
                 // create a statement cycle object to hold all of that data
