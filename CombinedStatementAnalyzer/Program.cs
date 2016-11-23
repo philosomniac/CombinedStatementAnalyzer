@@ -102,8 +102,16 @@ namespace CombinedStatementAnalyzer
                                          group s by s.CustomerAccountID into g
                                          select new { CustomerAccountID = g.Key, StatementCount = g.Count() };
 
-                //TODO: Fix this to account for combined statements with >2
-                int combinedStatementsCount = combinedStatementsQuery.Where(x => x.StatementCount > 1).Sum(x => x.StatementCount);
+                
+                //int combinedStatementsCount = combinedStatementsQuery.Where(x => x.StatementCount > 1).Sum(x => x.StatementCount);
+
+                //So what we really want to calculate here is the number of statements "saved" from being generated for each cycle.
+                //A statement combined with one other statement should be counted as one statement saved, and a statement
+                //combined with two other statements should be counted as two.
+                //that comes out to calculating the sum of combined statements minus the count of combined statements
+                int combinedStatementsRawSum = combinedStatementsQuery.Where(x => x.StatementCount > 1).Sum(x => x.StatementCount);
+                int combinedStatementsRawCount = combinedStatementsQuery.Where(x => x.StatementCount > 1).Count();
+                int combinedStatementsCount = combinedStatementsRawSum - combinedStatementsRawCount;
 
 
                 // create a statement cycle object to hold all of that data
